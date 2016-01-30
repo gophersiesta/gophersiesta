@@ -13,7 +13,7 @@
 
 package main
 
-import "github.com/gophergala2016/gophersiesta/Godeps/_workspace/src/github.com/spf13/cobra/cobra/cmd"
+import "github.com/gophersiesta/gophersiesta/Godeps/_workspace/src/github.com/spf13/cobra/cobra/cmd"
 
 func main() {
 	cmd.Execute()

@@ -1,6 +1,6 @@
 package main
 
-import "github.com/gophergala2016/gophersiesta/server"
+import "github.com/gophersiesta/gophersiesta/server"
 
 func main() {
 

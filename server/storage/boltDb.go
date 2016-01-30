@@ -3,7 +3,7 @@ package storage
 import (
 	"bytes"
 	"fmt"
-	"github.com/gophergala2016/gophersiesta/Godeps/_workspace/src/github.com/boltdb/bolt"
+	"github.com/gophersiesta/gophersiesta/Godeps/_workspace/src/github.com/boltdb/bolt"
 	"log"
 	"strings"
 )

@@ -24,8 +24,8 @@ import (
 	"time"
 
 	mangen "github.com/cpuguy83/go-md2man/md2man"
-	"github.com/gophergala2016/gophersiesta/Godeps/_workspace/src/github.com/spf13/cobra"
-	"github.com/gophergala2016/gophersiesta/Godeps/_workspace/src/github.com/spf13/pflag"
+	"github.com/gophersiesta/gophersiesta/Godeps/_workspace/src/github.com/spf13/cobra"
+	"github.com/gophersiesta/gophersiesta/Godeps/_workspace/src/github.com/spf13/pflag"
 )
 
 // GenManTree will generate a man page for this command and all decendants

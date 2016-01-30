@@ -1,10 +1,10 @@
 package handlers
 
 import (
-	"github.com/gophergala2016/gophersiesta/Godeps/_workspace/src/github.com/gin-gonic/gin"
-	"github.com/gophergala2016/gophersiesta/Godeps/_workspace/src/github.com/spf13/viper"
-	"github.com/gophergala2016/gophersiesta/server/placeholders"
-	"github.com/gophergala2016/gophersiesta/server/storage"
+	"github.com/gophersiesta/gophersiesta/Godeps/_workspace/src/github.com/gin-gonic/gin"
+	"github.com/gophersiesta/gophersiesta/Godeps/_workspace/src/github.com/spf13/viper"
+	"github.com/gophersiesta/gophersiesta/server/placeholders"
+	"github.com/gophersiesta/gophersiesta/server/storage"
 	"io"
 	"io/ioutil"
 	"net/http"

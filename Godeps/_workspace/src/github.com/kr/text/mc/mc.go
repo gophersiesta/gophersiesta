@@ -10,7 +10,7 @@
 package main
 
 import (
-	"github.com/gophergala2016/gophersiesta/Godeps/_workspace/src/github.com/kr/text/colwriter"
+	"github.com/gophersiesta/gophersiesta/Godeps/_workspace/src/github.com/kr/text/colwriter"
 	"github.com/kr/pty"
 	"io"
 	"log"

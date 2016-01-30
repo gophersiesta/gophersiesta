@@ -8,9 +8,9 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/gophergala2016/gophersiesta/Godeps/_workspace/src/github.com/hashicorp/hcl/hcl/ast"
-	"github.com/gophergala2016/gophersiesta/Godeps/_workspace/src/github.com/hashicorp/hcl/hcl/parser"
-	"github.com/gophergala2016/gophersiesta/Godeps/_workspace/src/github.com/hashicorp/hcl/hcl/token"
+	"github.com/gophersiesta/gophersiesta/Godeps/_workspace/src/github.com/hashicorp/hcl/hcl/ast"
+	"github.com/gophersiesta/gophersiesta/Godeps/_workspace/src/github.com/hashicorp/hcl/hcl/parser"
+	"github.com/gophersiesta/gophersiesta/Godeps/_workspace/src/github.com/hashicorp/hcl/hcl/token"
 )
 
 // This is the tag to use with structures to have settings for HCL

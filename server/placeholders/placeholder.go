@@ -2,7 +2,7 @@ package placeholders
 
 import (
 	"fmt"
-	"github.com/gophergala2016/gophersiesta/Godeps/_workspace/src/github.com/spf13/viper"
+	"github.com/gophersiesta/gophersiesta/Godeps/_workspace/src/github.com/spf13/viper"
 	"strings"
 )
 

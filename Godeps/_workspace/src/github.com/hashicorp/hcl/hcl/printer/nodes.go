@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"sort"
 
-	"github.com/gophergala2016/gophersiesta/Godeps/_workspace/src/github.com/hashicorp/hcl/hcl/ast"
-	"github.com/gophergala2016/gophersiesta/Godeps/_workspace/src/github.com/hashicorp/hcl/hcl/token"
+	"github.com/gophersiesta/gophersiesta/Godeps/_workspace/src/github.com/hashicorp/hcl/hcl/ast"
+	"github.com/gophersiesta/gophersiesta/Godeps/_workspace/src/github.com/hashicorp/hcl/hcl/token"
 )
 
 const (

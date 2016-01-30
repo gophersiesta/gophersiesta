@@ -6,7 +6,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/gophergala2016/gophersiesta/Godeps/_workspace/src/github.com/inconshreveable/mousetrap"
+	"github.com/gophersiesta/gophersiesta/Godeps/_workspace/src/github.com/inconshreveable/mousetrap"
 )
 
 var preExecHookFn = preExecHook

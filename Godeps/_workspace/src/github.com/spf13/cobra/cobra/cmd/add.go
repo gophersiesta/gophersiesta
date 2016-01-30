@@ -18,8 +18,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/gophergala2016/gophersiesta/Godeps/_workspace/src/github.com/spf13/cobra"
-	"github.com/gophergala2016/gophersiesta/Godeps/_workspace/src/github.com/spf13/viper"
+	"github.com/gophersiesta/gophersiesta/Godeps/_workspace/src/github.com/spf13/cobra"
+	"github.com/gophersiesta/gophersiesta/Godeps/_workspace/src/github.com/spf13/viper"
 )
 
 func init() {

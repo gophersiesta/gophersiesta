@@ -31,12 +31,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gophergala2016/gophersiesta/Godeps/_workspace/src/github.com/kr/pretty"
-	"github.com/gophergala2016/gophersiesta/Godeps/_workspace/src/github.com/mitchellh/mapstructure"
-	"github.com/gophergala2016/gophersiesta/Godeps/_workspace/src/github.com/spf13/cast"
-	jww "github.com/gophergala2016/gophersiesta/Godeps/_workspace/src/github.com/spf13/jwalterweatherman"
-	"github.com/gophergala2016/gophersiesta/Godeps/_workspace/src/github.com/spf13/pflag"
-	"github.com/gophergala2016/gophersiesta/Godeps/_workspace/src/gopkg.in/fsnotify.v1"
+	"github.com/gophersiesta/gophersiesta/Godeps/_workspace/src/github.com/kr/pretty"
+	"github.com/gophersiesta/gophersiesta/Godeps/_workspace/src/github.com/mitchellh/mapstructure"
+	"github.com/gophersiesta/gophersiesta/Godeps/_workspace/src/github.com/spf13/cast"
+	jww "github.com/gophersiesta/gophersiesta/Godeps/_workspace/src/github.com/spf13/jwalterweatherman"
+	"github.com/gophersiesta/gophersiesta/Godeps/_workspace/src/github.com/spf13/pflag"
+	"github.com/gophersiesta/gophersiesta/Godeps/_workspace/src/gopkg.in/fsnotify.v1"
 )
 
 var v *Viper

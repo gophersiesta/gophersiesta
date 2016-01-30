@@ -18,7 +18,7 @@ Currently the values for the placeholders for a given set of labels can be store
 As the project uses [godep](https://github.com/tools/godep) to make builds reproducibly
 
 ```
-    go get github.com/gophergala2016/gophersiesta
+    go get github.com/gophersiesta/gophersiesta
 ```
 
 ## Run
@@ -35,13 +35,13 @@ go run main.go
  - using env:	export GIN_MODE=release
  - using code:	gin.SetMode(gin.ReleaseMode)
 
-[GIN-debug] GET   /                         --> github.com/gophergala2016/gophersiesta/server/handlers.GetHome (3 handlers)
-[GIN-debug] GET   /conf/:appname            --> github.com/gophergala2016/gophersiesta/server/handlers.GetConfig (3 handlers)
-[GIN-debug] GET   /conf/:appname/placeholders --> github.com/gophergala2016/gophersiesta/server/handlers.GetPlaceHolders (3 handlers)
-[GIN-debug] GET   /conf/:appname/values     --> github.com/gophergala2016/gophersiesta/server/handlers.GetValues.func1 (3 handlers)
-[GIN-debug] POST  /conf/:appname/values     --> github.com/gophergala2016/gophersiesta/server/handlers.SetValues.func1 (3 handlers)
-[GIN-debug] GET   /conf/:appname/render/:format --> github.com/gophergala2016/gophersiesta/server/handlers.ReplacePlaceholders.func1 (3 handlers)
-[GIN-debug] GET   /conf/:appname/labels     --> github.com/gophergala2016/gophersiesta/server/handlers.GetLabels.func1 (3 handlers)
+[GIN-debug] GET   /                         --> github.com/gophersiesta/gophersiesta/server/handlers.GetHome (3 handlers)
+[GIN-debug] GET   /conf/:appname            --> github.com/gophersiesta/gophersiesta/server/handlers.GetConfig (3 handlers)
+[GIN-debug] GET   /conf/:appname/placeholders --> github.com/gophersiesta/gophersiesta/server/handlers.GetPlaceHolders (3 handlers)
+[GIN-debug] GET   /conf/:appname/values     --> github.com/gophersiesta/gophersiesta/server/handlers.GetValues.func1 (3 handlers)
+[GIN-debug] POST  /conf/:appname/values     --> github.com/gophersiesta/gophersiesta/server/handlers.SetValues.func1 (3 handlers)
+[GIN-debug] GET   /conf/:appname/render/:format --> github.com/gophersiesta/gophersiesta/server/handlers.ReplacePlaceholders.func1 (3 handlers)
+[GIN-debug] GET   /conf/:appname/labels     --> github.com/gophersiesta/gophersiesta/server/handlers.GetLabels.func1 (3 handlers)
 INFO: No PORT environment variable detected, defaulting to 4747
 [GIN-debug] Listening and serving HTTP on :4747
 ```

@@ -14,7 +14,7 @@
 
 package main
 
-import "github.com/gophergala2016/gophersiesta/client"
+import "github.com/gophersiesta/gophersiesta/client"
 
 func main() {
 	client.Execute()
