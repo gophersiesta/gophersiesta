@@ -97,7 +97,7 @@ func readValues() (map[string]string, error) {
 	vs := &common.Values{}
 	mValues := make(map[string]string)
 
-	body := GetValues()
+	body := "" //GetValues()
 
 	err := json.Unmarshal([]byte(body), vs)
 
@@ -132,7 +132,7 @@ func setPropertyHolderValue(p *common.Placeholder, currentVal string) {
 		buff.WriteString("=")
 		buff.WriteString(value)
 
-		SendProp(string(buff.Bytes()), label)
+		//SendProp(string(buff.Bytes()), label)
 	}
 }
 
