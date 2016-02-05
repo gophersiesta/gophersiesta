@@ -5,12 +5,13 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/gophersiesta/gophersiesta/Godeps/_workspace/src/github.com/spf13/cobra"
-	"github.com/gophersiesta/gophersiesta/server/placeholders"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
+
+	"github.com/gophersiesta/gophersiesta/Godeps/_workspace/src/github.com/spf13/cobra"
+	"github.com/gophersiesta/gophersiesta/common"
 )
 
 // setCmd represents the set command
@@ -37,7 +38,7 @@ func getPlaceholders() {
 		log.Fatal("Could not get Placehodlers current stored values")
 	}
 
-	fmt.Printf("\nThere are %v placeholders. Listing: \n", len(pls.Placeholders))
+	fmt.Printf("\nThere are %v common. Listing: \n", len(pls.Placeholders))
 
 	for _, p := range pls.Placeholders {
 		fmt.Printf("%s [$%s]\n", p.PropertyName, p.PlaceHolder)
@@ -56,8 +57,8 @@ func getPlaceholders() {
 
 }
 
-func readPlaceHolders() (*placeholders.Placeholders, error) {
-	pls := &placeholders.Placeholders{}
+func readPlaceHolders() (*common.Placeholders, error) {
+	pls := &common.Placeholders{}
 
 	if source == "" {
 		source = "https://gophersiesta.herokuapp.com/"
@@ -93,12 +94,12 @@ func readPlaceHolders() (*placeholders.Placeholders, error) {
 
 func readValues() (map[string]string, error) {
 
-	vs := &placeholders.Values{}
+	vs := &common.Values{}
 	mValues := make(map[string]string)
 
 	body := GetValues()
 
-	err := json.Unmarshal(body, vs)
+	err := json.Unmarshal([]byte(body), vs)
 
 	if err != nil {
 		return nil, err
@@ -111,7 +112,7 @@ func readValues() (map[string]string, error) {
 	return mValues, err
 }
 
-func setPropertyHolderValue(p *placeholders.Placeholder, currentVal string) {
+func setPropertyHolderValue(p *common.Placeholder, currentVal string) {
 	var value string
 	fmt.Printf("%s [$%s] --> %s:", p.PropertyName, p.PlaceHolder, currentVal)
 

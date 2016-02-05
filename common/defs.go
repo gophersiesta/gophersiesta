@@ -1,5 +1,6 @@
 package common
 
+import "encoding/json"
 
 // Placeholder groups the basic information to work with placeholders
 type Placeholder struct { // ${DATASOURCE_URL:jdbc:mysql://localhost:3306/shcema?profileSQL=true}
@@ -24,13 +25,27 @@ type Values struct {
 	Values []*Value `json:"values"`
 }
 
-func (values *Values)toMapString() (map[string]string, error) {
+func (values *Values) String() string {
+
+	params, err := values.ToMapString()
+	if err != nil {
+		return ""
+	}
+
+	jsonString, jsonError := json.Marshal(params)
+	if jsonError != nil {
+		return ""
+	}
+
+	return string(jsonString)
+}
+
+func (values *Values) ToMapString() (map[string]string, error) {
 	vMap := make(map[string]string)
 
 	for _, v := range values.Values {
 		vMap[v.Name] = v.Value
 	}
-
 
 	return vMap, nil
 }

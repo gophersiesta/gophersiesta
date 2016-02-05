@@ -3,10 +3,10 @@ package client
 import (
 	"fmt"
 
+	"strings"
+
 	"github.com/gophersiesta/gophersiesta/Godeps/_workspace/src/github.com/spf13/cobra"
-	"io/ioutil"
-	"log"
-	"net/http"
+	"github.com/gophersiesta/gophersiesta/common"
 )
 
 // getCmd represents the get command
@@ -15,34 +15,21 @@ var getCmd = &cobra.Command{
 	Short: "Get the values to be setup. From appname + label",
 	Long:  "Get the values to be setup. From appname + label",
 	Run: func(cmd *cobra.Command, args []string) {
-		body := GetValues()
-		fmt.Println(string(body))
+		fmt.Println(GetValues())
 	},
 }
+
 // GetValues return the raw response from the server calling http://url/conf/:appname/values
-func GetValues() []byte {
+func GetValues() string {
 
-	if source == "" {
-		source = "https://gophersiesta.herokuapp.com/"
-	}
-	if source[len(source)-1:] != "/" {
-		source += "/"
-	}
-	url := source + "conf/" + appName + "/values"
+	api := common.NewAPI(source)
+	values, err := api.GetValues(appName, strings.Split(label, ","))
 
-	if label != "" {
-		url = url + "?labels=" + label
-	}
-
-	fmt.Println("[api call] " + url)
-	res, err := http.Get(url)
 	if err != nil {
-		log.Fatal(err)
+		return "{}"
 	}
-	defer res.Body.Close()
-	body, _ := ioutil.ReadAll(res.Body)
 
-	return body
+	return values.String()
 }
 
 func init() {

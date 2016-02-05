@@ -1,21 +1,21 @@
 package common
 
 import (
-	"crypto/tls"
-	"net/http"
 	"bytes"
+	"crypto/tls"
 	"encoding/json"
-	"io/ioutil"
-	"strings"
 	"fmt"
+	"io/ioutil"
+	"net/http"
 	"net/http/httputil"
+	"strings"
 )
 
 type API struct {
-	endPoint    string
-	version     string
-	client   	*http.Client
-	debug 		bool
+	endPoint string
+	version  string
+	client   *http.Client
+	debug    bool
 }
 
 func NewAPI(endPoint string) *API {
@@ -24,12 +24,12 @@ func NewAPI(endPoint string) *API {
 	}
 	client := &http.Client{Transport: tr}
 
-	if len(endPoint)>0 && endPoint[len(endPoint)-1:] != "/" {
+	if len(endPoint) > 0 && endPoint[len(endPoint)-1:] != "/" {
 		endPoint += "/"
 	}
 
 	// for debug purposes only
-	if endPoint=="" {
+	if endPoint == "" {
 		endPoint = "https://gophersiesta.herokuapp.com/"
 	}
 
@@ -42,12 +42,12 @@ func (this *API) call(action, httpMethod string, params map[string]string) ([]by
 	var res *http.Response
 
 	// version is not used for the moment
-	url := this.endPoint+/*this.version+"/"+*/action
+	url := this.endPoint + /*this.version+"/"+*/ action
 
-	if httpMethod=="POST" {
+	if httpMethod == "POST" {
 
 		jsonString, jsonError := json.Marshal(params)
-		if jsonError!=nil {
+		if jsonError != nil {
 			return nil, jsonError
 		}
 
@@ -63,9 +63,9 @@ func (this *API) call(action, httpMethod string, params map[string]string) ([]by
 	} else {
 		valuesStr := ""
 		for key, val := range params {
-			valuesStr += "&"+key+"="+val
+			valuesStr += "&" + key + "=" + val
 		}
-		res, err = this.client.Get(url+"?"+valuesStr)
+		res, err = this.client.Get(url + "?" + valuesStr)
 		if this.debug {
 			fmt.Println("[GET] =>", url, valuesStr)
 			fmt.Println("[GET] <=")
@@ -100,7 +100,7 @@ func (this *API) GetTemplate(appname string) (string, error) {
 
 // http://gophersiesta.herokuapp.com/conf/:appname/placeholders
 func (this *API) GetPlaceholders(appname string) (Placeholders, error) {
-	dataStream, err := this.call("conf/" + appname + "/placeholders", "GET", nil)
+	dataStream, err := this.call("conf/"+appname+"/placeholders", "GET", nil)
 	var data Placeholders
 	json.Unmarshal(dataStream, &data)
 	return data, err
@@ -108,7 +108,7 @@ func (this *API) GetPlaceholders(appname string) (Placeholders, error) {
 
 // http://gophersiesta.herokuapp.com/conf/:appname/labels
 func (this *API) GetLabels(appname string) ([]string, error) {
-	dataStream, err := this.call("conf/" + appname + "/labels", "GET", nil)
+	dataStream, err := this.call("conf/"+appname+"/labels", "GET", nil)
 	var data []string
 	json.Unmarshal(dataStream, &data)
 	return data, err
@@ -120,7 +120,7 @@ func (this *API) GetValues(appname string, labels []string) (Values, error) {
 		"labels": strings.Join(labels, ","),
 	}
 
-	dataStream, err := this.call("conf/" + appname + "/values", "GET", params)
+	dataStream, err := this.call("conf/"+appname+"/values", "GET", params)
 	var data Values
 	json.Unmarshal(dataStream, &data)
 	return data, err
@@ -130,9 +130,9 @@ func (this *API) GetValues(appname string, labels []string) (Values, error) {
 func (this *API) SetValues(appname string, labels []string, values Values) (string, error) {
 	urlValues := "labels=" + strings.Join(labels, ",")
 
-	params, _ := values.toMapString()
+	params, _ := values.ToMapString()
 
-	dataStream, err := this.call("conf/" + appname + "/values?" + urlValues, "POST", params)
+	dataStream, err := this.call("conf/"+appname+"/values?"+urlValues, "POST", params)
 	var data string
 	json.Unmarshal(dataStream, &data)
 	return data, err
@@ -144,10 +144,8 @@ func (this *API) Render(appname string, labels []string, format string) (string,
 		"labels": strings.Join(labels, ","),
 	}
 
-	dataStream, err := this.call("conf/" + appname + "/render/" + format, "GET", params)
+	dataStream, err := this.call("conf/"+appname+"/render/"+format, "GET", params)
 	var data string
 	json.Unmarshal(dataStream, &data)
 	return data, err
 }
-
-
