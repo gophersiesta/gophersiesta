@@ -19,7 +19,6 @@ var setAllCmd = &cobra.Command{
 	Long:  "Set the values to be setup. From appname + label",
 	Run: func(cmd *cobra.Command, args []string) {
 		api := common.NewAPI(source)
-		api.Debug(true)
 		pls, err := api.GetPlaceholders(appName)
 
 		if err != nil {
