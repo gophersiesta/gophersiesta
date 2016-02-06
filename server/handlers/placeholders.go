@@ -4,15 +4,17 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"net/http"
+	"strings"
+
 	"github.com/gophersiesta/gophersiesta/Godeps/_workspace/src/github.com/BurntSushi/toml"
 	"github.com/gophersiesta/gophersiesta/Godeps/_workspace/src/github.com/gin-gonic/gin"
 	"github.com/gophersiesta/gophersiesta/Godeps/_workspace/src/github.com/spf13/viper"
 	"github.com/gophersiesta/gophersiesta/Godeps/_workspace/src/gopkg.in/yaml.v2"
+	"github.com/gophersiesta/gophersiesta/common"
 	"github.com/gophersiesta/gophersiesta/server/placeholders"
 	"github.com/gophersiesta/gophersiesta/server/storage"
-	"io/ioutil"
-	"net/http"
-	"strings"
 )
 
 // GetPlaceHolders return the placeholders that are present in the appname config file
@@ -105,7 +107,7 @@ func ReplacePlaceholders(s storage.Storage) func(c *gin.Context) {
 		labels := c.DefaultQuery("labels", "default")
 		renderType := c.Param("format")
 
-		list := make(map[string]*placeholders.Placeholder)
+		list := make(map[string]*common.Placeholder)
 
 		myViper, err := readTemplate(name)
 		if err != nil {

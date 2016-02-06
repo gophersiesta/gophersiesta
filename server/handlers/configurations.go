@@ -1,10 +1,6 @@
 package handlers
 
 import (
-	"github.com/gophersiesta/gophersiesta/Godeps/_workspace/src/github.com/gin-gonic/gin"
-	"github.com/gophersiesta/gophersiesta/Godeps/_workspace/src/github.com/spf13/viper"
-	"github.com/gophersiesta/gophersiesta/server/placeholders"
-	"github.com/gophersiesta/gophersiesta/server/storage"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -12,6 +8,11 @@ import (
 	"path/filepath"
 	"regexp"
 	"strings"
+
+	"github.com/gophersiesta/gophersiesta/Godeps/_workspace/src/github.com/gin-gonic/gin"
+	"github.com/gophersiesta/gophersiesta/Godeps/_workspace/src/github.com/spf13/viper"
+	"github.com/gophersiesta/gophersiesta/common"
+	"github.com/gophersiesta/gophersiesta/server/storage"
 )
 
 // Labels is a collection of labels that can be associated with the values of the placeholders
@@ -39,7 +40,6 @@ func GetConfig(c *gin.Context) {
 
 	}
 }
-
 
 // GetLabels return the stored labels for a given appname
 func GetLabels(s storage.Storage) func(c *gin.Context) {
@@ -104,7 +104,7 @@ func readConfigFile(v *viper.Viper) string {
 	return string(configFile)
 }
 
-func replaceTemplatePlaceHolders(v *viper.Viper, list map[string]*placeholders.Placeholder) string {
+func replaceTemplatePlaceHolders(v *viper.Viper, list map[string]*common.Placeholder) string {
 
 	template := readConfigFile(v)
 
