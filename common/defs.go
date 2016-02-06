@@ -49,3 +49,28 @@ func (values *Values) ToMapString() (map[string]string, error) {
 
 	return vMap, nil
 }
+
+func (pls *Placeholders) String() string {
+
+	var params []map[string]string
+	for _, p := range pls.Placeholders {
+		params = append(params, p.ToMapString())
+	}
+
+	jsonString, jsonError := json.Marshal(params)
+	if jsonError != nil {
+		return ""
+	}
+
+	return string(jsonString)
+}
+
+func (placeholder *Placeholder) ToMapString() map[string]string {
+	pMap := make(map[string]string)
+
+	pMap["name"] = placeholder.PropertyName
+	pMap["value"] = placeholder.PropertyValue
+	pMap["placeholder"] = placeholder.PlaceHolder
+
+	return pMap
+}
