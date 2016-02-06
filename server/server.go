@@ -1,11 +1,12 @@
 package server
 
 import (
+	"log"
+	"os"
+
 	"github.com/gophersiesta/gophersiesta/Godeps/_workspace/src/github.com/gin-gonic/gin"
 	"github.com/gophersiesta/gophersiesta/server/handlers"
 	"github.com/gophersiesta/gophersiesta/server/storage"
-	"log"
-	"os"
 )
 
 var db storage.Storage
@@ -49,12 +50,13 @@ func StartServer() *Server {
 	// Return list of set labels
 	server.GET("/conf/:appname/labels", handlers.GetLabels(db))
 
+	// Return list of apps on the server
+	server.GET("/apps", handlers.GetApps(db))
+
 	server.Run(getPort())
 
 	return server
 }
-
-
 
 func getPort() string {
 	var port = os.Getenv("PORT")

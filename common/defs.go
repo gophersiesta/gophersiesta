@@ -25,6 +25,16 @@ type Values struct {
 	Values []*Value `json:"values"`
 }
 
+// Labels is a collection of labels that can be associated with the values of the placeholders
+type Labels struct {
+	Labels []string `json:"labels"`
+}
+
+// Apps is a collection of apps in the server
+type Apps struct {
+	Apps []string `json:"apps"`
+}
+
 func (values *Values) String() string {
 
 	params, err := values.ToMapString()

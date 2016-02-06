@@ -126,6 +126,14 @@ func (this *API) GetValues(appname string, labels []string) (Values, error) {
 	return data, err
 }
 
+// http://gophersiesta.herokuapp.com/apps
+func (this *API) GetApps() (Apps, error) {
+	dataStream, err := this.call("apps", "GET", nil)
+	var data Apps
+	json.Unmarshal(dataStream, &data)
+	return data, err
+}
+
 // http://gophersiesta.herokuapp.com/conf/:appname/values?labels=:label1,:label2
 func (this *API) SetValues(appname string, labels []string, values Values) (string, error) {
 	urlValues := "labels=" + strings.Join(labels, ",")

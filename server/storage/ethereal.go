@@ -23,6 +23,17 @@ func (e *Ethereal) GetLabels(appname string) []string {
 	return lbls
 }
 
+// GetApps
+func (e *Ethereal) GetApps() []string {
+	apps := make([]string, 0)
+
+	for k := range e.options {
+		apps = append(apps, k)
+	}
+
+	return apps
+}
+
 // SetOption stores a placeholders value for a given appname, and label in the storage engine
 func (e *Ethereal) SetOption(appname, label, variable, value string) {
 

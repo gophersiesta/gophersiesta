@@ -15,11 +15,6 @@ import (
 	"github.com/gophersiesta/gophersiesta/server/storage"
 )
 
-// Labels is a collection of labels that can be associated with the values of the placeholders
-type Labels struct {
-	Labels []string `json:"labels"`
-}
-
 // GetConfig return the configuration file for a given appname
 func GetConfig(c *gin.Context) {
 	name := c.Param("appname")
@@ -49,9 +44,19 @@ func GetLabels(s storage.Storage) func(c *gin.Context) {
 
 		lbls := s.GetLabels(name)
 
-		labels := &Labels{lbls}
+		labels := &common.Labels{lbls}
 
 		c.IndentedJSON(http.StatusOK, labels)
+	}
+}
+
+// GetApps return the apps on the server
+func GetApps(s storage.Storage) func(c *gin.Context) {
+	return func(c *gin.Context) {
+
+		apps := s.GetApps()
+
+		c.IndentedJSON(http.StatusOK, &common.Apps{apps})
 	}
 }
 
