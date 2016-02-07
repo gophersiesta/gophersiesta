@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/gophersiesta/gophersiesta/Godeps/_workspace/src/github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin"
 	"github.com/gophersiesta/gophersiesta/server/handlers"
 	"github.com/gophersiesta/gophersiesta/server/storage"
 )

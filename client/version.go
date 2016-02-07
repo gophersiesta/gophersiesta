@@ -17,7 +17,7 @@ package client
 import (
 	"fmt"
 
-	"github.com/gophersiesta/gophersiesta/Godeps/_workspace/src/github.com/spf13/cobra"
+	"github.com/spf13/cobra"
 )
 
 var versionCmd = &cobra.Command{

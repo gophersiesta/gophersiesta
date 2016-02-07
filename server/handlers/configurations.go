@@ -9,10 +9,10 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/gophersiesta/gophersiesta/Godeps/_workspace/src/github.com/gin-gonic/gin"
-	"github.com/gophersiesta/gophersiesta/Godeps/_workspace/src/github.com/spf13/viper"
+	"github.com/gin-gonic/gin"
 	"github.com/gophersiesta/gophersiesta/common"
 	"github.com/gophersiesta/gophersiesta/server/storage"
+	"github.com/spf13/viper"
 )
 
 // GetConfig return the configuration file for a given appname

@@ -17,8 +17,9 @@ package client
 import (
 	"fmt"
 
-	"github.com/gophersiesta/gophersiesta/Godeps/_workspace/src/github.com/spf13/cobra"
 	"net/http"
+
+	"github.com/spf13/cobra"
 
 	"io/ioutil"
 	"log"

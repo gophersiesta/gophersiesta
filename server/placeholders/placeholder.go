@@ -2,11 +2,11 @@ package placeholders
 
 import (
 	"fmt"
-	"github.com/gophersiesta/gophersiesta/Godeps/_workspace/src/github.com/spf13/viper"
 	"strings"
-	"github.com/gophersiesta/gophersiesta/common"
-)
 
+	"github.com/gophersiesta/gophersiesta/common"
+	"github.com/spf13/viper"
+)
 
 // GetPlaceHolders uses the provided viper configuration to extract properties that have placeholders in is values
 func GetPlaceHolders(conf *viper.Viper) common.Placeholders {

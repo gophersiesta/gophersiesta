@@ -6,7 +6,7 @@ import (
 	"log"
 	"strings"
 
-	"github.com/gophersiesta/gophersiesta/Godeps/_workspace/src/github.com/boltdb/bolt"
+	"github.com/boltdb/bolt"
 )
 
 // BoltDb holds the properties for working with kind of storage
