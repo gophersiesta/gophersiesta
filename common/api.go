@@ -66,6 +66,9 @@ func (this *API) call(action, httpMethod string, params map[string]string) ([]by
 			valuesStr += "&" + key + "=" + val
 		}
 		res, err = this.client.Get(url + "?" + valuesStr)
+		if err != nil {
+			return nil, err
+		}
 		if this.debug {
 			fmt.Println("[GET] =>", url, valuesStr)
 			fmt.Println("[GET] <=")
