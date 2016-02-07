@@ -3,7 +3,7 @@ package termbox
 import "syscall"
 import "unsafe"
 import "unicode/utf16"
-import "github.com/mattn/go-runewidth"
+import "github.com/gophersiesta/gophersiesta/Godeps/_workspace/src/github.com/mattn/go-runewidth"
 
 type (
 	wchar     uint16

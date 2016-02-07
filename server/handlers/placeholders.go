@@ -8,13 +8,13 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/BurntSushi/toml"
-	"github.com/gin-gonic/gin"
+	"github.com/gophersiesta/gophersiesta/Godeps/_workspace/src/github.com/BurntSushi/toml"
+	"github.com/gophersiesta/gophersiesta/Godeps/_workspace/src/github.com/gin-gonic/gin"
+	"github.com/gophersiesta/gophersiesta/Godeps/_workspace/src/github.com/spf13/viper"
+	"github.com/gophersiesta/gophersiesta/Godeps/_workspace/src/gopkg.in/yaml.v2"
 	"github.com/gophersiesta/gophersiesta/common"
 	"github.com/gophersiesta/gophersiesta/server/placeholders"
 	"github.com/gophersiesta/gophersiesta/server/storage"
-	"github.com/spf13/viper"
-	"gopkg.in/yaml.v2"
 )
 
 // GetPlaceHolders return the placeholders that are present in the appname config file

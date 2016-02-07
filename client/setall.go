@@ -8,8 +8,8 @@ import (
 
 	"strings"
 
+	"github.com/gophersiesta/gophersiesta/Godeps/_workspace/src/github.com/spf13/cobra"
 	"github.com/gophersiesta/gophersiesta/common"
-	"github.com/spf13/cobra"
 )
 
 // setCmd represents the set command

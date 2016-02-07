@@ -2,7 +2,8 @@ package hello
 
 import (
 	"net/http"
-	"github.com/gin-gonic/gin"
+
+	"github.com/gophersiesta/gophersiesta/Godeps/_workspace/src/github.com/gin-gonic/gin"
 )
 
 // This function's name is a must. App Engine uses it to drive the requests properly.
@@ -11,10 +12,10 @@ func init() {
 	r := gin.New()
 
 	// Define your handlers
-	r.GET("/", func(c *gin.Context){
+	r.GET("/", func(c *gin.Context) {
 		c.String(200, "Hello World!")
 	})
-	r.GET("/ping", func(c *gin.Context){
+	r.GET("/ping", func(c *gin.Context) {
 		c.String(200, "pong")
 	})
 

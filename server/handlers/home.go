@@ -3,7 +3,7 @@ package handlers
 import (
 	"net/http"
 
-	"github.com/gin-gonic/gin"
+	"github.com/gophersiesta/gophersiesta/Godeps/_workspace/src/github.com/gin-gonic/gin"
 )
 
 func GetHome(c *gin.Context) {

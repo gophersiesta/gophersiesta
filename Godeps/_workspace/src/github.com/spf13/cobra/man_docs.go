@@ -21,8 +21,8 @@ import (
 	"strings"
 	"time"
 
-	mangen "github.com/cpuguy83/go-md2man/md2man"
-	"github.com/spf13/pflag"
+	mangen "github.com/gophersiesta/gophersiesta/Godeps/_workspace/src/github.com/cpuguy83/go-md2man/md2man"
+	"github.com/gophersiesta/gophersiesta/Godeps/_workspace/src/github.com/spf13/pflag"
 )
 
 func GenManTree(cmd *Command, projectName, dir string) {

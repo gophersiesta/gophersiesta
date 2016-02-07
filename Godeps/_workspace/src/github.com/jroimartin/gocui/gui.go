@@ -7,7 +7,7 @@ package gocui
 import (
 	"errors"
 
-	"github.com/nsf/termbox-go"
+	"github.com/gophersiesta/gophersiesta/Godeps/_workspace/src/github.com/nsf/termbox-go"
 )
 
 // Handler represents a handler that can be used to update or modify the GUI.

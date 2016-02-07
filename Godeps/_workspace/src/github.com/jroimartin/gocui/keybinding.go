@@ -4,7 +4,7 @@
 
 package gocui
 
-import "github.com/nsf/termbox-go"
+import "github.com/gophersiesta/gophersiesta/Godeps/_workspace/src/github.com/nsf/termbox-go"
 
 type (
 	// Key represents special keys or keys combinations.

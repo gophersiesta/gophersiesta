@@ -19,7 +19,7 @@ import (
 
 	"net/http"
 
-	"github.com/spf13/cobra"
+	"github.com/gophersiesta/gophersiesta/Godeps/_workspace/src/github.com/spf13/cobra"
 
 	"io/ioutil"
 	"log"
