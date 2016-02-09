@@ -64,7 +64,8 @@ func readTemplate(appname string) (*viper.Viper, error) {
 
 	aux := viper.New()
 	aux.SetConfigName("config")
-	aux.AddConfigPath("apps/" + appname + "/")
+	//aux.SetConfigType("yml")
+	aux.AddConfigPath("../../apps/" + appname + "/")
 
 	err := aux.ReadInConfig()
 	return aux, err

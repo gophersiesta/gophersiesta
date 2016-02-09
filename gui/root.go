@@ -87,15 +87,6 @@ func keybindings(g *gocui.Gui) error {
 	if err := g.SetKeybinding("placeholders", gocui.KeyArrowUp, gocui.ModNone, cursorUp); err != nil {
 		return err
 	}
-	if err := g.SetKeybinding("values", gocui.KeyCtrlSpace, gocui.ModNone, nextView); err != nil {
-		return err
-	}
-	if err := g.SetKeybinding("values", gocui.KeyArrowDown, gocui.ModNone, cursorDown); err != nil {
-		return err
-	}
-	if err := g.SetKeybinding("values", gocui.KeyArrowUp, gocui.ModNone, cursorUp); err != nil {
-		return err
-	}
 	if err := g.SetKeybinding("", gocui.KeyCtrlC, gocui.ModNone, quit); err != nil {
 		return err
 	}
@@ -203,33 +194,37 @@ func layoutApps(g *gocui.Gui, sc ScreenConf) error {
 	return nil
 }
 
-func layoutPlaceHolders(g *gocui.Gui, sc ScreenConf) error {
+func layoutPlaceHolders(g *gocui.Gui, sc ScreenConf) (*gocui.View, error) {
 	if v, err := g.SetView("placeholders", sc.AppsWidth+sc.UseFrame, sc.TitleHeight, 2*sc.AppsWidth+2*sc.UseFrame, sc.Height-(sc.LinesOfHelp+1)); err != nil {
 		if err != gocui.ErrUnknownView {
-			return err
+			return v, err
 		}
 		v.Highlight = true
 		v.Title = "Placeholders"
 		fmt.Fprintln(v, "Loading ...")
+		return v, nil
 	}
 
-	return nil
+	return nil, nil
 }
 
-func layoutValues(g *gocui.Gui, sc ScreenConf) error {
+func layoutValues(g *gocui.Gui, sc ScreenConf) (*gocui.View, error) {
 	if v, err := g.SetView("values", 2*sc.AppsWidth+3*sc.UseFrame, sc.TitleHeight, sc.Width-1, sc.Height-(sc.LinesOfHelp+1)); err != nil {
 		if err != gocui.ErrUnknownView {
-			return err
+			return v, err
 		}
 		v.Highlight = true
 		v.Title = "Values"
 		fmt.Fprintln(v, "Loading ...")
+		return v, nil
 	}
-	return nil
+	return nil, nil
 }
 
 func loadPlaceholders(g *gocui.Gui, v *gocui.View) error {
 	sc := getScreenConf(g)
+
+	_, y := v.Cursor()
 
 	if err := g.DeleteView("placeholders"); err != nil {
 		return err
@@ -239,8 +234,18 @@ func loadPlaceholders(g *gocui.Gui, v *gocui.View) error {
 		return err
 	}
 
-	layoutPlaceHolders(g, sc)
-	layoutValues(g, sc)
+	vp, _ := layoutPlaceHolders(g, sc)
+	vv, _ := layoutValues(g, sc)
+	vp.SetCursor(0, 0)
+	vp.Clear()
+	vv.Clear()
+	appName, _ := v.Line(y)
+	pls, _ := api.GetPlaceholders(appName)
+
+	for _, pl := range pls.Placeholders {
+		fmt.Fprintln(vp, pl.PropertyName)
+		fmt.Fprintln(vv, pl.PropertyValue+" ")
+	}
 
 	if err := g.SetCurrentView("placeholders"); err != nil {
 		return err
