@@ -21,8 +21,27 @@ type ScreenConf struct {
 	UseFrame    int
 }
 
-var globalC int
 var api *common.API
+
+type views struct {
+	apps         *gocui.View
+	placeholders *gocui.View
+	values       *gocui.View
+	dialog       *gocui.View
+	title        *gocui.View
+	help         *gocui.View
+}
+
+var myViews views
+
+type globalVar struct {
+	appName     string
+	placeholder string
+	pls         common.Placeholders
+	vls         common.Values
+}
+
+var global globalVar
 
 func nextView(g *gocui.Gui, v *gocui.View) error {
 	if v.Name() == "apps" {
@@ -35,28 +54,26 @@ func nextView(g *gocui.Gui, v *gocui.View) error {
 }
 
 func cursorDown(g *gocui.Gui, v *gocui.View) error {
-
-	globalC += 10
-	_ = layout(g)
-
-	if v != nil {
-		cx, cy := v.Cursor()
-		if err := v.SetCursor(cx, cy+1); err != nil {
-			ox, oy := v.Origin()
-			if err := v.SetOrigin(ox, oy+1); err != nil {
-				return err
-			}
-		}
-	}
-	return nil
+	return moveCursor(v, 1)
 }
 
 func cursorUp(g *gocui.Gui, v *gocui.View) error {
+	return moveCursor(v, -1)
+}
+
+func moveCursor(v *gocui.View, direction int) error {
 	if v != nil {
 		ox, oy := v.Origin()
 		cx, cy := v.Cursor()
-		if err := v.SetCursor(cx, cy-1); err != nil && oy > 0 {
-			if err := v.SetOrigin(ox, oy-1); err != nil {
+		err := v.SetCursor(cx, cy+direction)
+		if v.Name() == "placeholders" {
+			myViews.values.SetCursor(cx, cy+direction)
+		}
+		if err != nil && (direction == 1 || (direction == -1 && oy > 0)) {
+			if v.Name() == "placeholders" {
+				myViews.values.SetOrigin(ox, oy+direction)
+			}
+			if err := v.SetOrigin(ox, oy+direction); err != nil {
 				return err
 			}
 		}
@@ -142,6 +159,8 @@ func layoutTitle(g *gocui.Gui, sc ScreenConf) error {
 		v.BgColor = gocui.ColorCyan
 		v.FgColor = gocui.ColorBlack
 		fmt.Fprint(v, "GopherSiesta - Drunken Kittens Config Manager")
+
+		myViews.title = v
 	}
 
 	return nil
@@ -169,6 +188,7 @@ func layoutHelp(g *gocui.Gui, sc ScreenConf) error {
 		fmt.Fprint(v, "^C Close   ")
 		fmt.Fprintln(v, "")
 
+		myViews.help = v
 	}
 	return nil
 }
@@ -190,6 +210,8 @@ func layoutApps(g *gocui.Gui, sc ScreenConf) error {
 		if err := g.SetCurrentView("apps"); err != nil {
 			return err
 		}
+
+		myViews.apps = v
 	}
 	return nil
 }
@@ -202,6 +224,8 @@ func layoutPlaceHolders(g *gocui.Gui, sc ScreenConf) (*gocui.View, error) {
 		v.Highlight = true
 		v.Title = "Placeholders"
 		fmt.Fprintln(v, "Loading ...")
+
+		myViews.placeholders = v
 		return v, nil
 	}
 
@@ -216,6 +240,8 @@ func layoutValues(g *gocui.Gui, sc ScreenConf) (*gocui.View, error) {
 		v.Highlight = true
 		v.Title = "Values"
 		fmt.Fprintln(v, "Loading ...")
+
+		myViews.values = v
 		return v, nil
 	}
 	return nil, nil
@@ -224,7 +250,7 @@ func layoutValues(g *gocui.Gui, sc ScreenConf) (*gocui.View, error) {
 func loadPlaceholders(g *gocui.Gui, v *gocui.View) error {
 	sc := getScreenConf(g)
 
-	_, y := v.Cursor()
+	_, y := myViews.apps.Cursor()
 
 	if err := g.DeleteView("placeholders"); err != nil {
 		return err
@@ -239,12 +265,28 @@ func loadPlaceholders(g *gocui.Gui, v *gocui.View) error {
 	vp.SetCursor(0, 0)
 	vp.Clear()
 	vv.Clear()
-	appName, _ := v.Line(y)
-	pls, _ := api.GetPlaceholders(appName)
+	global.appName, _ = v.Line(y)
+	pls, _ := api.GetPlaceholders(global.appName)
+	vls, _ := api.GetValues(global.appName, []string{""})
+	global.vls = vls
+	global.pls = pls
 
 	for _, pl := range pls.Placeholders {
+
+		value := pl.PropertyValue
+		for _, vl := range vls.Values {
+			if vl.Name == pl.PlaceHolder {
+				value = vl.Value
+				break
+			}
+		}
+
+		if len(value) == 0 {
+			value = " "
+		}
 		fmt.Fprintln(vp, pl.PropertyName)
-		fmt.Fprintln(vv, pl.PropertyValue+" ")
+		fmt.Fprintln(vv, value)
+
 	}
 
 	if err := g.SetCurrentView("placeholders"); err != nil {
@@ -258,7 +300,8 @@ func editValue(g *gocui.Gui, v *gocui.View) error {
 	var err error
 
 	_, cy := v.Cursor()
-	if l, err = v.Line(cy); err != nil {
+	global.placeholder, _ = myViews.placeholders.Line(cy)
+	if l, err = myViews.values.Line(cy); err != nil {
 		l = ""
 	}
 
@@ -267,18 +310,46 @@ func editValue(g *gocui.Gui, v *gocui.View) error {
 		if err != gocui.ErrUnknownView {
 			return err
 		}
-		fmt.Fprintln(v, l)
+		lx := len(l)
+		fmt.Fprintln(v, l[:lx])
+		if l == " " {
+			lx = 0
+		}
+		v.SetCursor(lx, 0)
 		if err := g.SetCurrentView("dialog"); err != nil {
 			return err
 		}
+		v.Editable = true
+		myViews.dialog = v
 	}
 	return nil
 }
 
 func saveValue(g *gocui.Gui, v *gocui.View) error {
+	var l string
+
+	//myViews.dialog.Rewind()
+	l = myViews.dialog.ViewBuffer()
+	lx := len(l)
+
+	var pl string
+	for _, placeholder := range global.pls.Placeholders {
+		if placeholder.PropertyName == global.placeholder {
+			pl = placeholder.PlaceHolder
+			break
+		}
+	}
+
+	value := common.Value{pl, l[:lx-2]}
+	values := common.Values{[]*common.Value{&value}}
+
+	api.SetValues(global.appName, []string{""}, values)
+
 	if err := g.DeleteView("dialog"); err != nil {
 		return err
 	}
+
+	loadPlaceholders(g, myViews.apps)
 
 	if err := g.SetCurrentView("placeholders"); err != nil {
 		return err
