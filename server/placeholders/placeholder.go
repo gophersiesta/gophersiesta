@@ -2,42 +2,31 @@ package placeholders
 
 import (
 	"fmt"
-	"github.com/gophersiesta/gophersiesta/Godeps/_workspace/src/github.com/spf13/viper"
 	"strings"
+
+	"github.com/gophersiesta/gophersiesta/Godeps/_workspace/src/github.com/spf13/viper"
+	"github.com/gophersiesta/gophersiesta/common"
 )
 
-
-// Placeholder groups the basic information to work with placeholders
-type Placeholder struct { // ${DATASOURCE_URL:jdbc:mysql://localhost:3306/shcema?profileSQL=true}
-	PropertyName  string `json:"property_name"`  // the full path to the property datasource.url
-	PropertyValue string `json:"property_value"` // jdbc:mysql://localhost:3306/shcema?profileSQL=true
-	PlaceHolder   string `json:"placeholder"`    // DATASOURCE_URL
-}
-
-// Placeholders is a collection of Placeholder
-type Placeholders struct {
-	Placeholders []*Placeholder `json:"placeholders"`
-}
-
 // GetPlaceHolders uses the provided viper configuration to extract properties that have placeholders in is values
-func GetPlaceHolders(conf *viper.Viper) Placeholders {
+func GetPlaceHolders(conf *viper.Viper) common.Placeholders {
 	list := parseMap(conf.AllSettings())
 
 	properties := CreateProperties(list)
 
-	return Placeholders{properties}
+	return common.Placeholders{properties}
 }
 
 // CreateProperties transform the propsMap into a Property struct slice
-func CreateProperties(propsMap map[string]string) []*Placeholder {
+func CreateProperties(propsMap map[string]string) []*common.Placeholder {
 	count := len(propsMap)
 
-	ps := make([]*Placeholder, count)
+	ps := make([]*common.Placeholder, count)
 	i := 0
 	for k, v := range propsMap {
 		p, d, err := extractPlaceholder(v)
 		if err == nil {
-			p := &Placeholder{k, d, p}
+			p := &common.Placeholder{k, d, p}
 			ps[i] = p
 		}
 

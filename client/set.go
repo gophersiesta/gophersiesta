@@ -1,14 +1,14 @@
 package client
 
 import (
-	"bytes"
-	"crypto/tls"
 	"encoding/json"
 	"fmt"
+	"strings"
+
+	"os"
+
 	"github.com/gophersiesta/gophersiesta/Godeps/_workspace/src/github.com/spf13/cobra"
-	"io/ioutil"
-	"log"
-	"net/http"
+	"github.com/gophersiesta/gophersiesta/common"
 )
 
 // setCmd represents the set command
@@ -17,52 +17,38 @@ var setCmd = &cobra.Command{
 	Short: "Set all the values to configuration manager. Needed {appname + label}",
 	Long:  "Set all the values to be setup. From appname + label",
 	Run: func(cmd *cobra.Command, args []string) {
+		api := common.NewAPI(source)
 
-		SendProp(properties, label)
+		data := map[string]interface{}{}
+		json.Unmarshal([]byte(properties), &data)
+
+		var values common.Values
+
+		if len(data) > 0 { //it's a JSON
+			for k, v := range data {
+				values.Values = append(values.Values, &common.Value{k, fmt.Sprint(v)})
+			}
+		} else if strings.Contains(properties, "=") {
+			pairs := strings.Split(properties, ",")
+			for _, v := range pairs {
+				vv := strings.Split(v, "=")
+				values.Values = append(values.Values, &common.Value{vv[0], strings.Join(vv[1:], "=")})
+			}
+		} else {
+			fmt.Println("ERROR")
+			os.Exit(0)
+		}
+
+		success, err := api.SetValues(appName, strings.Split(label, ","), values)
+
+		if err != nil {
+			fmt.Println("ERROR")
+		}
+
+		fmt.Println(success)
+
 	},
 }
-
-// SendProp send the prop to the config service for the namespace label
-func SendProp(prop string, label string) {
-	var err error
-	var res *http.Response
-
-	if source == "" {
-		source = "https://gophersiesta.herokuapp.com/"
-	}
-	if source[len(source)-1:] != "/" {
-		source += "/"
-	}
-	url := source + "conf/" + appName + "/values"
-
-	if label != "" {
-		url = url + "?labels=" + label
-	}
-
-	fmt.Println(url)
-
-	tr := &http.Transport{
-		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
-	}
-	client := &http.Client{Transport: tr}
-
-	fmt.Println(prop)
-	req, _ := http.NewRequest("POST", url, bytes.NewBuffer([]byte(prop)))
-	res, err = client.Do(req)
-	if err != nil {
-		log.Fatal(err)
-	}
-	body, err := ioutil.ReadAll(res.Body)
-	if err != nil {
-		log.Fatal(err)
-	}
-	res.Body.Close()
-	var data string //map[string]interface{}{}
-	json.Unmarshal(body, &data)
-
-	fmt.Println(data)
-}
-
 
 func init() {
 	rootCmd.AddCommand(setCmd)

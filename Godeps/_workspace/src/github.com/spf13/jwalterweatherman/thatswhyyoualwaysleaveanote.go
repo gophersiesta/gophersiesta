@@ -65,13 +65,6 @@ var (
 	fatal           *NotePad = &NotePad{Level: LevelFatal, Handle: os.Stdout, Logger: &FATAL, Prefix: "FATAL: "}
 	logThreshold    Level    = DefaultLogThreshold
 	outputThreshold Level    = DefaultStdoutThreshold
-
-	DATE     = log.Ldate
-	TIME     = log.Ltime
-	SFILE    = log.Lshortfile
-	LFILE    = log.Llongfile
-	MSEC     = log.Lmicroseconds
-	logFlags = DATE | TIME | SFILE
 )
 
 func init() {
@@ -98,17 +91,12 @@ func initialize() {
 	}
 
 	for _, n := range NotePads {
-		*n.Logger = log.New(n.Handle, n.Prefix, logFlags)
+		*n.Logger = log.New(n.Handle, n.Prefix, log.Ldate)
 	}
 
 	LOG = log.New(LogHandle,
 		"LOG:   ",
-		logFlags)
-}
-
-// Set the log Flags (Available flag: DATE, TIME, SFILE, LFILE and MSEC)
-func SetLogFlag(flags int) {
-	logFlags = flags
+		log.Ldate|log.Ltime|log.Lshortfile)
 }
 
 // Level returns the current global log threshold.
@@ -153,8 +141,7 @@ func SetLogFile(path string) {
 		CRITICAL.Println("Failed to open log file:", path, err)
 		os.Exit(-1)
 	}
-
-	INFO.Println("Logging to", file.Name())
+	fmt.Println("Logging to", file.Name())
 
 	LogHandle = file
 	initialize()
@@ -167,7 +154,7 @@ func UseTempLogFile(prefix string) {
 		CRITICAL.Println(err)
 	}
 
-	INFO.Println("Logging to", file.Name())
+	fmt.Println("Logging to", file.Name())
 
 	LogHandle = file
 	initialize()
@@ -183,16 +170,14 @@ func DiscardLogging() {
 // logging with the standard extra information (date, file, etc)
 // Only Println and Printf are currently provided for this
 func (fb *Feedback) Println(v ...interface{}) {
-	s := fmt.Sprintln(v...)
-	fmt.Print(s)
-	LOG.Output(2, s)
+	fmt.Println(v...)
+	LOG.Println(v...)
 }
 
 // Feedback is special. It writes plainly to the output while
 // logging with the standard extra information (date, file, etc)
 // Only Println and Printf are currently provided for this
 func (fb *Feedback) Printf(format string, v ...interface{}) {
-	s := fmt.Sprintf(format, v...)
-	fmt.Print(s)
-	LOG.Output(2, s)
+	fmt.Printf(format, v...)
+	LOG.Printf(format, v...)
 }

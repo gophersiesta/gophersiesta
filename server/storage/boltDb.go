@@ -3,9 +3,10 @@ package storage
 import (
 	"bytes"
 	"fmt"
-	"github.com/gophersiesta/gophersiesta/Godeps/_workspace/src/github.com/boltdb/bolt"
 	"log"
 	"strings"
+
+	"github.com/gophersiesta/gophersiesta/Godeps/_workspace/src/github.com/boltdb/bolt"
 )
 
 // BoltDb holds the properties for working with kind of storage
@@ -14,6 +15,7 @@ type BoltDb struct {
 	Name             string
 	PropsBucketName  []byte
 	LabelsBucketName []byte
+	AppsBucketName   []byte
 	*bolt.DB
 }
 
@@ -25,6 +27,7 @@ func (s *BoltDb) Init() {
 	s.Name = "gophersiesta.DB"
 	s.PropsBucketName = []byte("props")
 	s.LabelsBucketName = []byte("labels")
+	s.AppsBucketName = []byte("apps")
 
 	db, err := bolt.Open(s.Name, 0600, nil)
 	if err != nil {
@@ -40,6 +43,11 @@ func (s *BoltDb) Init() {
 		}
 
 		_, err = tx.CreateBucketIfNotExists(s.LabelsBucketName)
+		if err != nil {
+			return fmt.Errorf("create bucket: %s", err)
+		}
+
+		_, err = tx.CreateBucketIfNotExists(s.AppsBucketName)
 		if err != nil {
 			return fmt.Errorf("create bucket: %s", err)
 		}
@@ -77,18 +85,39 @@ func (s *BoltDb) GetLabels(appName string) []string {
 	return lbls
 }
 
+// GetApps
+func (s *BoltDb) GetApps() []string {
+	apps := make([]string, 0)
+
+	s.View(func(tx *bolt.Tx) error {
+		// Assume bucket exists and has keys
+		b := tx.Bucket(s.AppsBucketName)
+		c := b.Cursor()
+
+		for k, v := c.First(); k != nil; k, v = c.Next() {
+			apps = append(apps, parseValue(v))
+		}
+
+		return nil
+	})
+
+	return apps
+}
+
 // SetOption stores a placeholders value for a given appname, and label in the storage engine
 func (s *BoltDb) SetOption(appName string, label string, variable string, value string) {
 
 	s.Update(func(tx *bolt.Tx) error {
 		b := tx.Bucket(s.PropsBucketName)
 		bl := tx.Bucket(s.LabelsBucketName)
+		ba := tx.Bucket(s.AppsBucketName)
 
 		k := getPropertyKey(appName, label, variable)
 		lk := getLabelKey(appName, label)
 
 		err := b.Put(k, []byte(value))
 		err = bl.Put(lk, []byte(getLabel(label)))
+		err = ba.Put([]byte(appName), []byte(appName))
 
 		return err
 	})
@@ -214,7 +243,6 @@ func getLabelKey(appName string, label string) []byte {
 
 	return []byte(fmt.Sprintf("%s-%s", appName, getLabel(label)))
 }
-
 
 // Close shutdowns the storage
 func (s *BoltDb) Close() {

@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"gopkg.in/go-playground/validator.v5"
+	"github.com/gophersiesta/gophersiesta/Godeps/_workspace/src/gopkg.in/bluesuncorp/validator.v5"
 )
 
 // User contains user information

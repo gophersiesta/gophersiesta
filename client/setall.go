@@ -2,15 +2,14 @@ package client
 
 import (
 	"bufio"
-	"bytes"
-	"encoding/json"
 	"fmt"
-	"github.com/gophersiesta/gophersiesta/Godeps/_workspace/src/github.com/spf13/cobra"
-	"github.com/gophersiesta/gophersiesta/server/placeholders"
-	"io/ioutil"
 	"log"
-	"net/http"
 	"os"
+
+	"strings"
+
+	"github.com/gophersiesta/gophersiesta/Godeps/_workspace/src/github.com/spf13/cobra"
+	"github.com/gophersiesta/gophersiesta/common"
 )
 
 // setCmd represents the set command
@@ -19,99 +18,51 @@ var setAllCmd = &cobra.Command{
 	Short: "Set the values to configuration manager. Needed {appname + label}",
 	Long:  "Set the values to be setup. From appname + label",
 	Run: func(cmd *cobra.Command, args []string) {
-		getPlaceholders()
+		api := common.NewAPI(source)
+		pls, err := api.GetPlaceholders(appName)
+
+		if err != nil {
+			log.Fatal("Could not get Placehodlers")
+		}
+
+		values, err := api.GetValues(appName, strings.Split(label, ","))
+		if err != nil {
+			log.Fatal("Could not get Values")
+		}
+
+		fmt.Println(values.String())
+		fmt.Println(pls.String())
+
+		fmt.Printf("\nThere are %v common. Listing: \n", len(pls.Placeholders))
+
+		for _, p := range pls.Placeholders {
+			fmt.Printf("%s [$%s] (current value: \"%s\")\n", p.PropertyName, p.PlaceHolder, p.PropertyValue)
+		}
+
+		fmt.Printf("\n\n")
+		fmt.Printf("Type value for each placeholder and press ENTER, or ENTER to skip or left as before: \n")
+		fmt.Printf("	explanation: property.path [$PLACE_HOLDER] --> curentvalue \n")
+
+		mValues, err := values.ToMapString()
+		sValues := common.Values{}
+
+		for _, p := range pls.Placeholders {
+
+			pv := p.PropertyValue
+			if _, ok := mValues[p.PropertyName]; ok {
+				pv = mValues[p.PropertyName]
+			}
+
+			value := setPropertyHolderValue(p, pv)
+			sValue := common.Value{p.PropertyName, value}
+			sValues.Values = append(sValues.Values, &sValue)
+		}
+
+		api.SetValues(appName, strings.Split(label, ","), sValues)
 	},
 }
 
-func getPlaceholders() {
-
-	pls, err := readPlaceHolders()
-
-	if err != nil {
-		log.Fatal("Could not get Placehodlers")
-	}
-
-	mValues, err := readValues()
-
-	if err != nil {
-		log.Fatal("Could not get Placehodlers current stored values")
-	}
-
-	fmt.Printf("\nThere are %v placeholders. Listing: \n", len(pls.Placeholders))
-
-	for _, p := range pls.Placeholders {
-		fmt.Printf("%s [$%s]\n", p.PropertyName, p.PlaceHolder)
-	}
-
-	fmt.Printf("\n\n")
-	fmt.Printf("Type value for each placeholder and press ENTER, or ENTER to skip or left as before: \n")
-	fmt.Printf("	explanation: property.path [$PLACE_HOLDER] --> curentvalue \n")
-
-	for _, p := range pls.Placeholders {
-
-		pv := mValues[p.PlaceHolder]
-
-		setPropertyHolderValue(p, pv)
-	}
-
-}
-
-func readPlaceHolders() (*placeholders.Placeholders, error) {
-	pls := &placeholders.Placeholders{}
-
-	if source == "" {
-		source = "https://gophersiesta.herokuapp.com/"
-	}
-	if source[len(source)-1:] != "/" {
-		source += "/"
-	}
-	url := source + "conf/" + appName + "/placeholders"
-
-	label := label
-	if label != "" {
-		url = url + "?labels=" + label
-	}
-
-	fmt.Println("[api call] " + url)
-	res, err := http.Get(url)
-
-	if err != nil {
-		return nil, err
-	}
-
-	defer res.Body.Close()
-	body, _ := ioutil.ReadAll(res.Body)
-
-	err = json.Unmarshal(body, pls)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return pls, err
-}
-
-func readValues() (map[string]string, error) {
-
-	vs := &placeholders.Values{}
-	mValues := make(map[string]string)
-
-	body := GetValues()
-
-	err := json.Unmarshal(body, vs)
-
-	if err != nil {
-		return nil, err
-	}
-
-	for _, v := range vs.Values {
-		mValues[v.Name] = v.Value
-	}
-
-	return mValues, err
-}
-
-func setPropertyHolderValue(p *placeholders.Placeholder, currentVal string) {
+func setPropertyHolderValue(p *common.Placeholder, currentVal string) string {
 	var value string
 	fmt.Printf("%s [$%s] --> %s:", p.PropertyName, p.PlaceHolder, currentVal)
 
@@ -122,17 +73,10 @@ func setPropertyHolderValue(p *placeholders.Placeholder, currentVal string) {
 		break
 	}
 
-	// send Property
 	if value != "" {
-
-		var buff bytes.Buffer
-
-		buff.WriteString(p.PlaceHolder)
-		buff.WriteString("=")
-		buff.WriteString(value)
-
-		SendProp(string(buff.Bytes()), label)
+		return value
 	}
+	return currentVal
 }
 
 func init() {

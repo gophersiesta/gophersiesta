@@ -1,8 +1,9 @@
 package hello
 
 import (
-	"github.com/gophersiesta/gophersiesta/Godeps/_workspace/src/github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/gophersiesta/gophersiesta/Godeps/_workspace/src/github.com/gin-gonic/gin"
 )
 
 // This function's name is a must. App Engine uses it to drive the requests properly.
