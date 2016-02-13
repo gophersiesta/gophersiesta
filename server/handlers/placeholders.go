@@ -144,8 +144,11 @@ func ReplacePlaceholders(s storage.Storage) func(c *gin.Context) {
 			}
 
 			if err != nil {
-
 				c.String(http.StatusInternalServerError, "Could not render %s", err)
+
+				// FALLBACK, instead of an error render only the placeholders
+				//b, err = json.MarshalIndent(list, "", "    ")
+				//c.Data(http.StatusOK, "text/json", b)
 			}
 		}
 
