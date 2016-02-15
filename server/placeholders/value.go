@@ -4,7 +4,6 @@ import (
 	"github.com/gophersiesta/gophersiesta/common"
 )
 
-
 // CreateValues transforms a map of string to Values struct
 func CreateValues(m map[string]string) common.Values {
 	values := make([]*common.Value, len(m))

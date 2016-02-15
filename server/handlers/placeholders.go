@@ -131,13 +131,20 @@ func ReplacePlaceholders(s storage.Storage) func(c *gin.Context) {
 
 			template := replaceTemplatePlaceHolders(myViper, list)
 
-			extension := getFileExtension(myViper)
+			b := []byte(template)
+			var err error
 
-			replacedViper := viper.New()
-			replacedViper.SetConfigType(extension)
-			replacedViper.ReadConfig(bytes.NewBuffer([]byte(template)))
+			if renderType == "original" {
+			} else {
 
-			b, err := render(replacedViper, renderType)
+				extension := getFileExtension(myViper)
+
+				replacedViper := viper.New()
+				replacedViper.SetConfigType(extension)
+				replacedViper.ReadConfig(bytes.NewBuffer([]byte(template)))
+
+				b, err = render(replacedViper, renderType)
+			}
 
 			if err == nil {
 				c.Data(http.StatusOK, "text/plain", b)
@@ -162,9 +169,7 @@ func render(v *viper.Viper, configOutputType string) ([]byte, error) {
 	var conf = make(map[string]interface{})
 
 	m := v.AllSettings()
-
 	b, err = yaml.Marshal(m)
-
 	err = yaml.Unmarshal(b, conf)
 
 	if err == nil {

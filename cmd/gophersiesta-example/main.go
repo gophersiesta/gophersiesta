@@ -54,6 +54,6 @@ func main() {
 	fmt.Println(api.GetValues(appname, labels))
 
 	fmt.Println("RENDER ===")
-	fmt.Println(api.Render(appname, labels, "json"))
+	fmt.Println(api.Render(appname, labels, "original"))
 
 }
