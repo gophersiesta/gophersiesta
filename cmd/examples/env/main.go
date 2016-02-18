@@ -29,6 +29,12 @@ func main() {
 	appname := "app1"
 	labels := []string{""}
 
+	if appname == "" {
+		fmt.Println()
+	}
+
+	fmt.Println("APPNAME", "======", appname)
+
 	api := common.NewAPI("http://localhost:4747")
 	api.Debug(true)
 

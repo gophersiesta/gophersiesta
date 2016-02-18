@@ -1,0 +1,8 @@
+siesta:
+  build: .
+  environment:
+    - SIESTA_APP=app1
+  stdin_open: true
+  tty: true
+
+
