@@ -28,11 +28,6 @@ func NewAPI(endPoint string) *API {
 		endPoint += "/"
 	}
 
-	// for debug purposes only
-	if endPoint == "" {
-		endPoint = "https://gophersiesta.herokuapp.com/"
-	}
-
 	return &API{endPoint, "v1", client, false}
 }
 
