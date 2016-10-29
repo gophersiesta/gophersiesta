@@ -25,7 +25,6 @@ var versionCmd = &cobra.Command{
 	Short: "Prints client version.",
 	Long:  "Prints client version.",
 	Run: func(cmd *cobra.Command, args []string) {
-		// TODO: Work your own magic here
 		fmt.Println("gophersiesta-client v.0.1")
 	},
 }
