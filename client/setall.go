@@ -83,7 +83,7 @@ func init() {
 	rootCmd.AddCommand(setAllCmd)
 
 	setAllCmd.Flags().StringVarP(&appName, "appname", "a", "", "Application name")
-	setAllCmd.Flags().StringVarP(&source, "source", "s", "https://gophersiesta.herokuapp.com/", "Source directory to read from")
+	setAllCmd.Flags().StringVarP(&source, "source", "s", "", "Source directory to read from")
 	setAllCmd.Flags().StringVarP(&label, "label", "l", "", "Select label to be fetch")
 
 }
